@@ -96,8 +96,8 @@ This project, then, generalizes much of the code we painstakingly arrived at thr
 - There are two main methods to get time-series data: `get_data` and `get_timeseries`. When one shall use each function is not intuitive.
 - Eikon tends to time out or throw errors when requesting much data. Such timeouts often occur because one asks for too much data. Too much could entail requesting too many items or sending too many requests per day. Eikon does not tell which it is when throwing a timeout error.
 - When using `ek.get_timeseries`, the available fields vary with what type of data you request. For example, when requesting stock quotes, "CLOSE" and "OPEN" are available, while "VALUE" is not. When getting macro series, the "VALUE" field is populated while all the others are not.
-- Eikon tended to be a little sloppy with the date boundaries we provided. For example, rows with duplicated dates appeared or dates that were before the start date specified. These cases can easily be removed after getting data but be aware that this can happen and act accordingly.
-- Beware of the frequency of the data you are requesting. For example, asking for market capitalization data (typically recorded daily) and revenue (reported quarterly) can give weird results. It is therefore best to get market cap and fundamentals in separate queries.
+- Eikon tended to be a little sloppy with our date boundaries. For example, rows with duplicated dates appeared or dates that were before the start date specified. One can easily remove these cases after getting data but be aware that this can happen and act accordingly.
+- Beware of the frequency of the data you are requesting. For example, asking for market capitalization data (typically recorded daily) and revenue (reported quarterly) can give weird results. It is, therefore, best to get market cap and fundamentals in separate queries.
 
 ### How we addressed the issues
 
@@ -145,20 +145,27 @@ For the example in question, the above procedure results in the following screen
 
 One can utilize the Eikon equity screening tool if one desires to create more complex screening queries or start from scratch. Again, let us say we will develop the same screen as above, follow these steps.
 
-1. Use the search bar to search for _"screen"_ and go the the app called _"Screener"_.
-2. On the left-hand side, one can choose from a long list of screening ideas or create one's own screen.
-3. Search for data items and specify values ranges in the bar on the left, and see what companies qualify as you progress.
+1. Search for _"screen"_ in the search bar and go to the app called _"Screener"_.
+2. On the left-hand side, one can choose from a long list of screening ideas or create a new screen.
+3. Search for data items, specify values ranges in the bar on the left, and see what companies qualify as you progress.
 
 ![Eikon Screening Tool](img/screening-tool.png)
 
 4. Once you are happy with the screen, press the arrow to the right of the Excel icon in the top right and choose _"Export all as formulas"_.
-5. Open the Excel file and copy the contents of the cell that contains the formula (only the first argument to the `@TR()` function). You can now use this string in the screening code we provide (or elsewhere).
+5. Open the Excel file and copy the contents of the cell that contains the formula (only the first argument to the `@TR()` function). You can now use this string in our screening code (or elsewhere).
 
 ![Excel screening string](img/excel-screen-formula.png)
 
-The resulting screening string from the above example is `'SCREEN(U(IN(Equity(active,public,primary))/*UNV:Public*/), IN(TR.HQCountryCode,"CA"), Contains(TR.TRBCIndustryCode,"5120"), TR.Revenue(Period=FY0)>=100000, CURN=USD)'`. Here, one can see that the Eikon screener tool added some small modifications, these can be removed or kept as one likes.
+The resulting screening string from the above example is `'SCREEN(U(IN(Equity(active,public,primary))/*UNV:Public*/), IN(TR.HQCountryCode,"CA"), Contains(TR.TRBCIndustryCode,"5120"), TR.Revenue(Period=FY0)>=100000, CURN=USD)'`. Here, one can see that the Eikon screener tool added some small modifications. These can be removed or kept as one likes.
 
 ### The Data Downloading Tool
+
+The meat of the project is the `get_data` function, which handles a lot of the heavy lifting. The signature is `get_data(lst_of_tickers, fields, params, filename=None) -> pd.DataFrame` and the arguments are as follows:
+
+- `lst_of_tickers`: A list of strings, where each value is the Eikon ticker representing a company one wants data for (e.g., "GLO.TO," i.e., ticker GLO listed on the Toronto Stock Exchange). The easiest way to get this ticker list is through the screening function described above.
+- `fields`: A list of strings. Each string is the code for an Eikon data item. The best way to find these data items is in the [Data Item Browser](###The-Eikon-Data-Item-Browser).
+- `params`: A dictionary containing the parameters for the data request. These parameters include start and end date, currency, and data frequency.
+- `filename`: A string that, if provided, specifies the filename to which the tool should save the resulting data frame. If omitted, the code will not create a saved CSV and only return the data frame in memory.
 
 ## Examples
 

@@ -1,8 +1,10 @@
 # Eikon Python API Wrapper
 
+> Feel free to fork this repo if you want to play around with the code. Also, please don't hesitate to open pull requests to the repo if you have improved the code.
+
 ## Project Overview
 
-Welcome to the future of writing a quantitative Project and Master's thesis at the Institute for Industrial Economy (or whatever else you want to use these tools for, feel free). Two former Indøk students created this repository. During our work on the Master's thesis, we created the precursor to the code to make collecting large amounts of financial data as easy as possible. In this repo, we have tried to provide a generalized system that allows easy access to the most-used financial data (stocks, bonds, commodities), examples, and documentation. In short, this project we wished existed when we embarked on our Master's journey on a dark and cold March night in 2022.
+Welcome to the future of writing a quantitative Project and Master's thesis at the Institute for Industrial Economy (or whatever else you want to use these tools for, feel free). Two former Indøk students created this repository. During the work on our Master's thesis [(Ankile & Krange, 2022)](##Sources), we created the precursor to the code to make collecting large amounts of financial data as easy as possible. In this repo, we have tried to provide a generalized system that allows easy access to the most-used financial data (stocks, bonds, commodities), examples, and documentation. In short, this project we wished existed when we embarked on our Master's journey on a dark and cold March night in 2022.
 
 This project assumes some basic knowledge of Eikon. For an in-depth guide to using Eikon together with the Excel plugin to extract bond data, see [Fosse (2021)](##Sources). That guide goes into deep detail on using the Excel plugin and could be wise to peruse when working with Eikon.
 
@@ -94,6 +96,8 @@ This project, then, generalizes much of the code we painstakingly arrived at thr
 - There are two main methods to get time-series data: `get_data` and `get_timeseries`. When one shall use each function is not intuitive.
 - Eikon tends to time out or throw errors when requesting much data. Such timeouts often occur because one asks for too much data. Too much could entail requesting too many items or sending too many requests per day. Eikon does not tell which it is when throwing a timeout error.
 - When using `ek.get_timeseries`, the available fields vary with what type of data you request. For example, when requesting stock quotes, "CLOSE" and "OPEN" are available, while "VALUE" is not. When getting macro series, the "VALUE" field is populated while all the others are not.
+- Eikon tended to be a little sloppy with the date boundaries we provided. For example, rows with duplicated dates appeared or dates that were before the start date specified. These cases can easily be removed after getting data but be aware that this can happen and act accordingly.
+- Beware of the frequency of the data you are requesting. For example, asking for market capitalization data (typically recorded daily) and revenue (reported quarterly) can give weird results. It is therefore best to get market cap and fundamentals in separate queries.
 
 ### How we addressed the issues
 
@@ -101,9 +105,60 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Other Eikon
 
-- Finding fields: Select a small set of tickers and all data items that might interest you. Then, run `get_data` without specifying a filename and inspect the resulting data frame to see which data items are valid for this kind of entity.
+- **Finding fields:** Select a small set of tickers and all data items that might interest you. Then, run `get_data` without specifying a filename and inspect the resulting data frame to see which data items are valid for this kind of entity.
 
 ## Overview of Python package
+
+This tool centers around two main entry points:
+
+1. **A screening tool** that helps specify what kinds of securities you want data for and provides you with a list of Eikon tickers satisfying the criteria.
+2. **A data download tool** that wraps the standard Eikon API calls in logic that handles splitting requests and delegating to the two underlying data retrieval functions.
+
+### The Screening Tool
+
+The screening tool is mainly a helper to ensure one's screening criteria make sense by showing the user a list of all company names that match the screening criteria. This list we subsequently use in the requests for data makes it predictable what tickers one requests data for and how much to expect.
+
+#### Eikon Screening Syntax
+
+Eikon uses a proprietary syntax to define the criteria for which companies to include in the results. It is relatively straightforward to read but less so to write. As an example, if you want data for all public Norwegian oil-related companies (sector code 5010, 5020, 5030) with revenue larger than USD 500 000, you can use the following screening string: `'SCREEN(U(IN(Equity(active,public,primary))), TR.CompanyMarketCap>=500000, IN(TR.ExchangeMarketIdCode,"XOSL"), IN(TR.TRBCBusinessSectorCode,"5010","5020","5030"), CURN=USD)'`.
+
+#### Building Eikon Screening Strings
+
+##### Manually with the Data Item Browser
+
+When getting data for our Master's, we resorted to manually writing out the screening string, which works well for simple screens. The best way to do this is to start with an expression that resembles what you need and modify it. Our good old friend, the Data Item Explorer, is great for finding the relevant data item names and values for which one wants to screen.
+
+For example, if one wants to change the above screen to include mining companies with headquarters in Canada and revenue above USD 100 000, one could do the following.
+
+1. Go to the Data Item Browser and insert a company that you know fits your criteria in the "Instrument" box at the top.
+2. Search for the criteria you want to screen for (business sector and headquarters location in this case).
+
+![Data item search for sector](img/screening-sector.png)
+![Data item search for headquarter](img/screening-headquarter.png)
+
+3. In the search result table, the second column gives you the name of the data item to screen with, and the third column shows the appropriate value for that criteria.
+4. Lastly, substitute the values found in the Data Item Browser into the screening string, and test it out in the screening function.
+
+For the example in question, the above procedure results in the following screening string: `'SCREEN(U(IN(Equity(active,public,primary))), TR.Revenue>=100000, IN(TR.HeadquartersCountry,"Canada"), IN(TR.TRBCBusinessSectorCode,"5120"), CURN=USD)'`
+
+##### Through the Eikon Equity Screening tool
+
+One can utilize the Eikon equity screening tool if one desires to create more complex screening queries or start from scratch. Again, let us say we will develop the same screen as above, follow these steps.
+
+1. Use the search bar to search for _"screen"_ and go the the app called _"Screener"_.
+2. On the left-hand side, one can choose from a long list of screening ideas or create one's own screen.
+3. Search for data items and specify values ranges in the bar on the left, and see what companies qualify as you progress.
+
+![Eikon Screening Tool](img/screening-tool.png)
+
+4. Once you are happy with the screen, press the arrow to the right of the Excel icon in the top right and choose _"Export all as formulas"_.
+5. Open the Excel file and copy the contents of the cell that contains the formula (only the first argument to the `@TR()` function). You can now use this string in the screening code we provide (or elsewhere).
+
+![Excel screening string](img/excel-screen-formula.png)
+
+The resulting screening string from the above example is `'SCREEN(U(IN(Equity(active,public,primary))/*UNV:Public*/), IN(TR.HQCountryCode,"CA"), Contains(TR.TRBCIndustryCode,"5120"), TR.Revenue(Period=FY0)>=100000, CURN=USD)'`. Here, one can see that the Eikon screener tool added some small modifications, these can be removed or kept as one likes.
+
+### The Data Downloading Tool
 
 ## Examples
 
@@ -115,4 +170,6 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Sources
 
-Fosse, Henrik Giske (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true)
+Ankile, Lars L. & Krange, Kjartan 2022 _"Krankile/npmf GitHub repo"_ [https://github.com/Krankile/npmf](https://github.com/Krankile/npmf)
+
+Fosse, Henrik G. (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true)

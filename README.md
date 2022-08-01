@@ -4,7 +4,7 @@
 
 Welcome to the future of writing a quantitative Project and Master's thesis at the Institute for Industrial Economy (or whatever else you want to use these tools for, feel free). Two former Indøk students created this repository. During our work on the Master's thesis, we created the precursor to the code to make collecting large amounts of financial data as easy as possible. In this repo, we have tried to provide a generalized system that allows easy access to the most-used financial data (stocks, bonds, commodities), examples, and documentation. In short, this project we wished existed when we embarked on our Master's journey on a dark and cold March night in 2022.
 
-This project assumes some basic knowledge of Eikon. For an in-depth guide to using Eikon together with the Excel plugin to extract bond data, see [Fosse (2021)](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true). That guide goes into deep detail on using the Excel plugin and could be wise to peruse when working with Eikon.
+This project assumes some basic knowledge of Eikon. For an in-depth guide to using Eikon together with the Excel plugin to extract bond data, see [Fosse (2021)][1]. That guide goes into deep detail on using the Excel plugin and could be wise to peruse when working with Eikon.
 
 ## Introduction to Eikon
 
@@ -40,9 +40,14 @@ We have condensed and adapted this section from the [official documentation](htt
 
 #### 1. Start the Eikon desktop program on the accessing computer.
 
+On the computer at "Finanssal" at Kjelhuset, the easiest is probably to press the windows key and search for Eikon.
+
 #### 2. Create an app key for your application
 
-1. Search for "app key" in the Eikon search bar and navigate to the "App Key Generator" page.
+1. Search for _"app key"_ in the Eikon search bar and navigate to the "App Key Generator" page.
+
+![]()
+
 2. Once there, click the _"Register New App"_ button to create your key.
 3. Give it a suitable name (preferably something identifying you and when you're writing your thesis so administrators can safely delete your key once you're long gone into consulting or banking to do the devil's bidding) and check _"Eikon Data API"_ as the API access.
 4. Click register and accept the terms and conditions (Important! Read all the terms before accepting!)
@@ -106,4 +111,4 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Sources
 
-Fosse, Henrik Giske (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_
+[1]: Fosse, Henrik Giske (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true)

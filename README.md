@@ -4,7 +4,7 @@
 
 Welcome to the future of writing a quantitative Project and Master's thesis at the Institute for Industrial Economy (or whatever else you want to use these tools for, feel free). Two former Indøk students created this repository. During our work on the Master's thesis, we created the precursor to the code to make collecting large amounts of financial data as easy as possible. In this repo, we have tried to provide a generalized system that allows easy access to the most-used financial data (stocks, bonds, commodities), examples, and documentation. In short, this project we wished existed when we embarked on our Master's journey on a dark and cold March night in 2022.
 
-This project assumes some basic knowledge of Eikon. For an in-depth guide to using Eikon together with the Excel plugin to extract bond data, see [Fosse (2021)][1]. That guide goes into deep detail on using the Excel plugin and could be wise to peruse when working with Eikon.
+This project assumes some basic knowledge of Eikon. For an in-depth guide to using Eikon together with the Excel plugin to extract bond data, see [Fosse (2021)](##Sources). That guide goes into deep detail on using the Excel plugin and could be wise to peruse when working with Eikon.
 
 ## Introduction to Eikon
 
@@ -46,22 +46,26 @@ On the computer at "Finanssal" at Kjelhuset, the easiest is probably to press th
 
 1. Search for _"app key"_ in the Eikon search bar and navigate to the "App Key Generator" page.
 
-![]()
+![Search for the app key generator page](img/app-key-search.png)
 
-2. Once there, click the _"Register New App"_ button to create your key.
-3. Give it a suitable name (preferably something identifying you and when you're writing your thesis so administrators can safely delete your key once you're long gone into consulting or banking to do the devil's bidding) and check _"Eikon Data API"_ as the API access.
-4. Click register and accept the terms and conditions (Important! Read all the terms before accepting!)
+2. Once there, create your key by filling out the info at the top of the page. Please give it a suitable name (preferably something identifying you and when you're writing your thesis. This way, administrators can safely delete your key once you're long gone (into consulting or banking to do the devil's bidding)) and check _"Eikon Data API"_ as the API access. Finally, click the _"Register New App"_ button to create your key.
+
+![Create the key](img/app-key-create.png)
+
+4. Accept the terms and conditions (Important! Read all the terms and conditions before accepting!)
+
 5. Your app key should appear. Go ahead and copy that for later.
+   ![Copy the long string of random characters](img/app-key-copy-key.png)
 
 #### 3. Install the Eikon package and register with the app key
 
-Here, we assume you've leveraged your vast Python experience from TDT4110 — Information Technology, Introduction to set up the basic Python environment. The easiest way to get started in the present context is with Anaconda since this distribution already has Pandas and Numpy installed.
+We assume you've leveraged your vast Python experience from TDT4110 — Information Technology, Introduction to set up the standard Python environment. The easiest way to get started in the present context is with [Anaconda](https://www.anaconda.com/products/distribution) since this distribution already has Pandas and Numpy installed.
 
 1. Install the `eikon` package by running the command `pip install eikon`.
-2. Make sure the `eikon` package is imported with the command `import eikon as ek`
-3. Register the code with Eikon with the command `ek.set_app_key('8e5a3xxxxxxxxxxxxxxxxxxxxxxxxxxxx21b031c')`
+2. Ensure you import the `eikon` package with the command `import eikon as ek`.
+3. Register the code with Eikon with the command `ek.set_app_key('420a3xxxxxxxxxxxxxxxxxxxxxxxxxxxx216969c')`.
 
-You are now ready to start using the Eikon Python API (or our extension of it)
+You are ready to use the Eikon Python API (or our extension).
 
 ## Why should we use the Eikon API?
 
@@ -73,22 +77,22 @@ One important reason for using the API instead of the Excel plugin is because of
 - Excel only accommodates a little over one million rows and 16 000 columns—very little in our modern big-data age—and if more is required, tough luck solving it with Excel.
 - Excel is slow and inflexible when handling and manipulating data and fetching data from Eikon's servers, especially when the number of rows grows.
 - Excel is not particularly well suited for getting and working with time-series data.
-- Requesting data with Excel requires a lot of manual manipulation of the rows, columns, and formulas to get data—Python is much more flexible and automatable.
+- Requesting data with Excel requires manual manipulation of the rows, columns, and formulas to get data—Python is much more flexible and automatable.
 
 ## But Eikon already has a Python API. So why does this project exist?
 
 Eikon has a python package that allows one to get data with Python. However, they have not made it easy for people to use—instead, the opposite—at times, it seems like they have tried to make users' lives as hard as possible. Still, the gang over at Refinitiv claims this about their Python API wrapper:
 
-> The Eikon Data API Python library is an ease of use library, which conveniently wraps the raw message transcription between Eikon and Python and provides user friendly data retrieval calls. The data output from the Eikon Data API Python library is available as Pandas DataFrames or as JSON objects.
+> The Eikon Data API Python library is an ease-of-use library that conveniently wraps the raw message transcription between Eikon and Python and provides user-friendly data retrieval calls. The data output from the Eikon Data API Python library is available as Pandas DataFrames or as JSON objects.
 
-This is wrong. There is no ease of use, and the package feels outright hostile to users.
+I'm afraid that's not right. There is no ease of use, and the package feels outright hostile to users.
 
 This project, then, generalizes much of the code we painstakingly arrived at through countless hours of debugging Eikon errors. You can, of course, ask, "What's the point if it's so hard?" We agree, but if you want large amounts of up-to-date financial data, there is no other source available to us than Eikon (as far as we know), and Excel does just not cut it.
 
 ### Some issues to be aware of in the vanilla Eikon API
 
 - There are two main methods to get time-series data: `get_data` and `get_timeseries`. When one shall use each function is not intuitive.
-- Eikon tends to time out or throws errors when requesting a lot of data. Such timeouts often occur because one asks for too much data. Too much could entail requesting too many items or sending too many requests per day. Eikon does not tell which it is when throwing a timeout error.
+- Eikon tends to time out or throw errors when requesting much data. Such timeouts often occur because one asks for too much data. Too much could entail requesting too many items or sending too many requests per day. Eikon does not tell which it is when throwing a timeout error.
 - When using `ek.get_timeseries`, the available fields vary with what type of data you request. For example, when requesting stock quotes, "CLOSE" and "OPEN" are available, while "VALUE" is not. When getting macro series, the "VALUE" field is populated while all the others are not.
 
 ### How we addressed the issues
@@ -111,4 +115,4 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Sources
 
-[1]: Fosse, Henrik Giske (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true)
+Fosse, Henrik Giske (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true)

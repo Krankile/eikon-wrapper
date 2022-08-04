@@ -103,10 +103,6 @@ This project, then, generalizes much of the code we painstakingly arrived at thr
 
 We have tried to address the main pain points we experienced in the making our Master's. Our solution involves code that simplifies the dichotomy between the two data functions, handles batching and waiting when getting large amounts of data overnight, and manages common errors.
 
-## Other Eikon
-
-- **Finding fields:** Select a small set of tickers and all data items that might interest you. Then, run `get_data` without specifying a filename and inspect the resulting data frame to see which data items are valid for this kind of entity.
-
 ## Overview of Python package
 
 This tool centers around two main entry points:
@@ -122,9 +118,9 @@ The screening tool is mainly a helper to ensure one's screening criteria make se
 
 Eikon uses a proprietary syntax to define the criteria for which companies to include in the results. It is relatively straightforward to read but less so to write. As an example, if you want data for all public Norwegian oil-related companies (sector code 5010, 5020, 5030) with revenue larger than USD 500 000, you can use the following screening string: `'SCREEN(U(IN(Equity(active,public,primary))), TR.CompanyMarketCap>=500000, IN(TR.ExchangeMarketIdCode,"XOSL"), IN(TR.TRBCBusinessSectorCode,"5010","5020","5030"), CURN=USD)'`.
 
-#### Building Eikon Screening Strings
+#### Building Eikon Screening Strings (2 methods)
 
-##### Manually with the Data Item Browser
+##### 1. Manually with the Data Item Browser
 
 When getting data for our Master's, we resorted to manually writing out the screening string, which works well for simple screens. The best way to do this is to start with an expression that resembles what you need and modify it. Our good old friend, the Data Item Explorer, is great for finding the relevant data item names and values for which one wants to screen.
 
@@ -141,7 +137,7 @@ For example, if one wants to change the above screen to include mining companies
 
 For the example in question, the above procedure results in the following screening string: `'SCREEN(U(IN(Equity(active,public,primary))), TR.Revenue>=100000, IN(TR.HeadquartersCountry,"Canada"), IN(TR.TRBCBusinessSectorCode,"5120"), CURN=USD)'`
 
-##### Through the Eikon Equity Screening tool
+##### 2. Through the Eikon Equity Screening tool
 
 One can utilize the Eikon equity screening tool if one desires to create more complex screening queries or start from scratch. Again, let us say we will develop the same screen as above, follow these steps.
 
@@ -166,6 +162,14 @@ The meat of the project is the `get_data` function, which handles a lot of the h
 - `fields`: A list of strings. Each string is the code for an Eikon data item. The best way to find these data items is in the [Data Item Browser](###The-Eikon-Data-Item-Browser).
 - `params`: A dictionary containing the parameters for the data request. These parameters include start and end date, currency, and data frequency.
 - `filename`: A string that, if provided, specifies the filename to which the tool should save the resulting data frame. If omitted, the code will not create a saved CSV and only return the data frame in memory.
+
+All the code the tool relies on is available in the cells above the cells containing `get_data`. If you want to use the Eikon API for something slightly different than us, please feel free to peruse the code to see how you can use the underlying `eikon` package.
+
+The `get_data` function dynamically helps you get both time series data and company metadata like founding year and business sector. In most cases, one needs to define a universe of securities one wants data for, a set of data items, and a period (including the sampling frequency). Please see the examples below for inspiration on how you can do this. They include a sample with stock data, one with bonds data, and one with macro financial and commodity data.
+
+## General tips for using the tool
+
+- **Finding fields:** Select a small set of tickers and all data items that might interest you. Then, run `get_data` without specifying a filename and inspect the resulting data frame to see which data items are valid for this kind of entity.
 
 ## Examples
 

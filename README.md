@@ -105,10 +105,11 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Overview of Python package
 
-This tool centers around two main entry points:
+This tool centers around the `get_data` function.
 
-1. **A screening tool** that helps specify what kinds of securities you want data for and provides you with a list of Eikon tickers satisfying the criteria.
-2. **A data download tool** that wraps the standard Eikon API calls in logic that handles splitting requests and delegating to the two underlying data retrieval functions.
+The function wraps the standard Eikon API calls in logic that handles splitting requests and delegating of to Eikon's two underlying data retrieval functions (`ek.get_data` and `ek.get_timeseries`). 
+
+The package also offers some documentation on screening, which we first discuss as in deployment of the eikon_wrapper package the screening would naturally predecess a call of `get_data`.
 
 ### The Screening Tool
 
@@ -156,11 +157,11 @@ The resulting screening string from the above example is `'SCREEN(U(IN(Equity(ac
 
 ### The Data Downloading Tool
 
-The meat of the project is the `get_data` function, which handles a lot of the heavy lifting. The signature is `get_data(lst_of_tickers, fields, params, filename=None) -> pd.DataFrame` and the arguments are as follows:
+The meat of the project is the `get_data` function, which handles a lot of the heavy lifting. The signature is `get_data(lst_of_tickers, fields, params, filename=None) -> pd.DataFrame, pd.DataFrame` and the arguments are as follows:
 
-- `lst_of_tickers`: A list of strings, where each value is the Eikon ticker representing a company one wants data for (e.g., "GLO.TO," i.e., ticker GLO listed on the Toronto Stock Exchange). The easiest way to get this ticker list is through the screening function described above.
-- `fields`: A list of strings. Each string is the code for an Eikon data item. The best way to find these data items is in the [Data Item Browser](###The-Eikon-Data-Item-Browser).
-- `params`: A dictionary containing the parameters for the data request. These parameters include start and end date, currency, and data frequency.
+- `lst_of_tickers`: A list of strings, where each value is the Eikon ticker representing a entity one wants data for (e.g., "GLO.TO," i.e., ticker GLO listed on the Toronto Stock Exchange). The easiest way to get this ticker list is through the screening function described above. One can also search for specific timeseries using the built in search tool of Eikon (e.g. "BRT-" for Brent Spot). 
+- `fields`: A list of strings. Each string is the code for an Eikon data item. The best way to find these data items is in the [Data Item Browser](###The-Eikon-Data-Item-Browser). Leaving this blank will return what eikon deems is the most interesting value ("VALUE" or "CLOSE, for different asset classes)
+- `params`: A dictionary containing the parameters for the data request. These parameters include start and end date, currency, and data frequency. The params avalible change for different tickers, using the data item browser is your best bet if you are looking for some very specific parameter in your call. 
 - `filename`: A string that, if provided, specifies the filename to which the tool should save the resulting data frame. If omitted, the code will not create a saved CSV and only return the data frame in memory.
 
 All the code the tool relies on is available in the cells above the cells containing `get_data`. If you want to use the Eikon API for something slightly different than us, please feel free to peruse the code to see how you can use the underlying `eikon` package.
@@ -170,6 +171,10 @@ The `get_data` function dynamically helps you get both time series data and comp
 ## General tips for using the tool
 
 - **Finding fields:** Select a small set of tickers and all data items that might interest you. Then, run `get_data` without specifying a filename and inspect the resulting data frame to see which data items are valid for this kind of entity.
+
+- **See the examples:** We strongly suggest that you take a quick look at some of the examples we supply in the `data_collecton.ipynb`. The concrete examples will hopefully reduce some basic easy errors which has to be solved at the request level.  
+
+- **Sanity check data:** Be careful to check the data being returned, often one needs curious parameteres for a function call to return what one is acctualy interested in. Furtheremore, there are entreies in the database that simply make little sense, check your dataframe for standard weird values (e.g. TR.TotalAssets = 0 at one single time point is courious)
 
 ## Examples
 

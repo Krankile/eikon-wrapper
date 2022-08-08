@@ -174,6 +174,10 @@ The `get_data` function dynamically helps you get both time series data and comp
 
 - **Sanity check data:** Be careful to check the data being returned, often one needs curious parameteres for a function call to return what one is acctualy interested in. Furtheremore, there are entries in the database that simply make little sense, check your dataframe for standard weird values (e.g. in our experiments with 1600 stocks, with quarterly data over 20 years, TR.TotalAssets == 0 returned true for a single entity at a single time point)
 
+- **Multiple calls is often the solution:** When collecting data of different dimensionality using multiple calls is often a good solution. E.g. get daily stock data in one call, and fundamental data in another. Combining them locally.   
+
+- **Experiment!:** Eikon has so much data to do interesting things with, don't be afraid to try multiple diffrerent calls and explore using the Data Item Browser. 
+
 ## Examples
 
 See [Data collection examples](https://github.com/Krankile/eikon-wrapper/blob/main/data_collection.ipynb)

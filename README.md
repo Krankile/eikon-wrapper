@@ -105,7 +105,7 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Overview of Python package
 
-This package centers around the `get_data` function, a strong data collection tool. The function wraps the standard Eikon API calls in logic that handles splitting requests and delegating of to Eikon's two underlying data retrieval functions (`ek.get_data` and `ek.get_timeseries`). 
+This package centers around the `get_data` function, a strong data collection tool. The function wraps the standard Eikon API calls in logic that handles splitting requests and delegating to Eikon's two underlying data retrieval functions (`ek.get_data` and `ek.get_timeseries`). 
 
 The package also offers some documentation on screening, which we first discuss as in deployment of the eikon_wrapper package the screening would naturally predecess a call of `get_data`.
 
@@ -173,6 +173,10 @@ The `get_data` function dynamically helps you get both time series data and comp
 - **See the examples:** We strongly suggest that you take a quick look at some of the examples we supply in the `data_collecton.ipynb`. The concrete examples will hopefully reduce some basic input errors.  
 
 - **Sanity check data:** Be careful to check the data being returned, often one needs curious parameteres for a function call to return what one is acctualy interested in. Furtheremore, there are entries in the database that simply make little sense, check your dataframe for standard weird values (e.g. in our experiments with 1600 stocks, with quarterly data over 20 years, TR.TotalAssets == 0 returned true for a single entity at a single time point)
+
+- **Multiple calls is often the solution:** When collecting data of different dimensionality using multiple calls is often a good solution. E.g. get daily stock data in one call, and fundamental data in another. Combining them locally.   
+
+- **Experiment!:** Eikon has so much data to do interesting things with, don't be afraid to try multiple diffrerent calls and explore using the Data Item Browser. 
 
 ## Examples
 

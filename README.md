@@ -105,7 +105,7 @@ We have tried to address the main pain points we experienced in the making our M
 
 ## Overview of Python package
 
-This package centers around the `get_data` function, a strong data collection tool. The function wraps the standard Eikon API calls in logic that handles splitting requests and delegating of to Eikon's two underlying data retrieval functions (`ek.get_data` and `ek.get_timeseries`). 
+This package centers around the `get_data` function, a strong data collection tool. The function wraps the standard Eikon API calls in logic that handles splitting requests and delegating to Eikon's two underlying data retrieval functions (`ek.get_data` and `ek.get_timeseries`). 
 
 The package also offers some documentation on screening, which we first discuss as in deployment of the eikon_wrapper package the screening would naturally predecess a call of `get_data`.
 

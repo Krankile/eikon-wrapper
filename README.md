@@ -189,4 +189,4 @@ See [Data collection examples](https://github.com/Krankile/eikon-wrapper/blob/ma
 
 Ankile, Lars L. & Krange, Kjartan 2022 _"Krankile/npmf GitHub repo"_ [https://github.com/Krankile/npmf](https://github.com/Krankile/npmf)
 
-Fosse, Henrik G. (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [[https://docs.google.com/document/d/1KYKZ6Mcp7nYa3xAMIlHPpvCGj6XhV9Hm/edit?usp=sharing&ouid=102135063001800642455&rtpof=true&sd=true](https://github.com/Krankile/eikon-wrapper/blob/main/The%20complete%20guide%20to%20extracting%20bond%20data%20from%20EIKON_OnlineVersion%20(1).pdf)](https://github.com/Krankile/eikon-wrapper/blob/main/The%20complete%20guide%20to%20extracting%20bond%20data%20from%20EIKON_OnlineVersion%20(1).pdf)
+Fosse, Henrik G. (2021), _"The complete guide to extracting bond data from Eikon (as far as I know)."_ [https://github.com/Krankile/eikon-wrapper/blob/main/The%20complete%20guide%20to%20extracting%20bond%20data%20from%20EIKON_OnlineVersion%20(1).pdf](https://github.com/Krankile/eikon-wrapper/blob/main/The%20complete%20guide%20to%20extracting%20bond%20data%20from%20EIKON_OnlineVersion%20(1).pdf)

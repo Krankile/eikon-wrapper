@@ -1,0 +1,32 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Eikon Python API Wrapper
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Lars
+    name-particle: L
+    family-names: Ankile
+    email: larsankile@g.harvard.edu
+    affiliation: Harvard University
+  - given-names: Kjartan
+    family-names: Krange
+repository-code: 'https://github.com/Krankile/eikon-wrapper'
+abstract: >-
+  Welcome to the future of writing a quantitative Project
+  and Master's thesis at the Department of Industrial
+  Economics and Technology Management (or whatever else you
+  want to use these tools for, feel free). Two former Indøk
+  students created this repository. During the work on our
+  Master's thesis (Ankile & Krange, 2022), we created the
+  precursor to the code to make collecting large amounts of
+  financial data as easy as possible. In this repo, we have
+  tried to provide a generalized system that allows easy
+  access to the most-used financial data (stocks, bonds,
+  commodities), examples, and documentation. In short, this
+  is the project we wished existed when we embarked on our
+  Master's journey on a dark and cold March night in 2022.
